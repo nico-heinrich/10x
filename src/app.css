@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-primary text-secondary font-mono;
+}
+
+.container {
+  @apply mx-auto max-w-screen-xl px-4 sm:px-8;
+}
+
+.button {
+  position: relative;
+  box-shadow: 0 0 0 2px theme("colors.secondary") inset;
+  padding: theme("spacing.4") theme("spacing.6");
+  border-radius: theme("borderRadius.lg");
+  background-color: theme("colors.primary");
+  text-align: center;
+  transition: all .1s;
+}
+
+.button:hover {
+  box-shadow: 0 0 0 2px theme("colors.secondary") inset,
+              0 3px theme("colors.secondary / 50%");
+  transform: translateY(-3px);
+}
+
+.button:active {
+  box-shadow: 0 0 0 2px theme("colors.secondary") inset;
+  transform: translateY(0);
+}
+
+dialog {
+  transform: translateY(2rem);
+  opacity: 0;
+  transition: all .2s ease allow-discrete;
+}
+
+dialog::backdrop {
+  background-color: theme("colors.primary");
+  opacity: 0;
+  transition: opacity .2s ease allow-discrete;
+}
+
+dialog[open] {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+
+dialog[open]::backdrop {
+  opacity: .5;
+}
+
+@starting-style {
+  dialog[open] {
+    transform: translateY(2rem);
+    opacity: 0;
+  }
+
+  dialog[open]::backdrop {
+    opacity: 0;
+  }
+}

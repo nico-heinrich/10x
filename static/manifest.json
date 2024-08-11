@@ -4,7 +4,7 @@
   "start_url": ".",
   "display": "standalone",
   "background_color": "#fff",
-  "theme_color": "#000",
+  "theme_color": "#7c5cff",
   "orientation": "portrait",
   "description": "A Progressive Web App",
   "icons": [

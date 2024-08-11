@@ -1,12 +1,12 @@
 {
-  "name": "Progressive Web App",
-  "short_name": "PWA",
+  "name": "10x Training",
+  "short_name": "10x",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#fff",
   "theme_color": "#7c5cff",
   "orientation": "portrait",
-  "description": "A Progressive Web App",
+  "description": "Become a 10x developer the playful way!",
   "icons": [
     {
       "src": "./icon.png",

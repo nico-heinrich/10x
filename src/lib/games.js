@@ -5,7 +5,6 @@ export const games = [
     description: "Master the art of responsive design! Dive into the world of CSS units and sharpen your skills by converting between rems and pixels. Perfect for those looking to level up their front-end development game.",
     pairs: {
       easy: [
-        ["0.5rem", "8px"],
         ["1rem", "16px"],
         ["2rem", "32px"],
         ["3rem", "48px"],

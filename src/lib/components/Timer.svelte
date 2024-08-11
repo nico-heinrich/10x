@@ -30,7 +30,7 @@
         seconds = 0;
         milliseconds = 0;
       }
-    }, 1);
+    }, 10);
   }
 
   export function stop() {

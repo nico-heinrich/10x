@@ -37,8 +37,6 @@ export async function GET({ params }) {
       };
     }));
 
-    console.log(result)
-
     return new Response(result, { status: 200 });
   } catch(error) {
     console.error(error);

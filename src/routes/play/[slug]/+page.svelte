@@ -6,6 +6,7 @@
   import Pairs from '$lib/components/Pairs.svelte';
   import Timer from '$lib/components/Timer.svelte';
   import Modal from "$lib/components/Modal.svelte";
+  import SubmitScoreInput from "$lib/components/SubmitScoreInput.svelte";
   import { onMount } from 'svelte';
   import matchSoundSrc from '$lib/sounds/match.wav';
   import levelSoundSrc from '$lib/sounds/level.wav';
@@ -13,6 +14,9 @@
   import lostSoundSrc from '$lib/sounds/lost.wav';
   import { isEasyMode } from '$lib/stores/preferences';
   import { enhance } from '$app/forms';
+
+  export let form;
+  let isFormLoading = false;
 
   const soundCollection = [
     { name: 'match', src: matchSoundSrc },
@@ -110,6 +114,7 @@
     repeated = 0;
     lifes = 3;
     hasEnded = false;
+    form = null;
     setUp();
   }
 
@@ -135,11 +140,12 @@
     const res = await fetch(`/api/leaderboard/${$page.params.slug}`);
     const data = await res.json();
 
-    ranking = data.find((item, index) => {
-      if (item.score < score) {
-        return index + 1;
-      }
-    });
+    if (data.length < 10) {
+      ranking = data.length + 1;
+      return;
+    }
+
+    ranking = data.findIndex(item => item.score < score) + 1;
   }
 
   onMount(setUp);
@@ -155,20 +161,29 @@
         <!-- Lost Screen -->
         <div class="space-y-4">
           <h1 class="text-4xl font-bold">Oh snap!</h1>
-          <p>Looks like you lost all your lifes.</p>
+          {#if lifes === 0}
+            <p class="text-balance">You've  run out of lives!</p>
+          {:else if score < 1}
+            <p class="text-balance">Did you fell asleep?</p>
+          {/if}
         </div>
       {:else}
         <!-- Won Screen -->
         <div class="space-y-4">
           <h1 class="text-4xl font-bold">Wohoo!</h1>
           {#if (!$isEasyMode && ranking)}
-            <p>You've completed the game with a score of {score} and ranked {ranking}!</p>
-            <p>Submit your score to the leaderboard if you want to:</p>
-            <form action="?/submit" use:enhance>
+            <p class="text-balance">You've completed the game with a score of {score} and ranked {ranking} on the leaderboard!</p>
+            <p class="text-balance">Submit your score if you want to:</p>
+            <form method="POST" action="?/submit" use:enhance={() => {
+              isFormLoading = true;
+              return async ({ update }) => {
+                await update();
+                isFormLoading = false;
+              }
+            }}>
               <input type="hidden" name="score" value={score}>
               <input type="hidden" name="game" value={$page.params.slug}>
-              <input type="text" name="name" placeholder="Your name">
-              <button class="button">Submit</button>
+              <SubmitScoreInput name="name" value={form?.name} success={form?.success} error={form?.error} {isFormLoading} />
             </form>
           {:else}
             <p>You've completed the game with a score of {score}!</p>

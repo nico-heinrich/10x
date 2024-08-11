@@ -12,21 +12,23 @@
     interval = setInterval(() => {
       milliseconds--;
 
-      console.log(milliseconds);
-
       if (milliseconds < 0) {
-        seconds--;
         milliseconds = 99;
+        seconds--;
       }
 
       if (seconds < 0) {
-        minutes--;
         seconds = 59;
+        minutes--;
       }
 
       if (minutes < 0) {
         clearInterval(interval);
         onEnd();
+
+        minutes = 0;
+        seconds = 0;
+        milliseconds = 0;
       }
     }, 10);
   }

@@ -3,7 +3,7 @@
   import ModeSwitch from "$lib/components/ModeSwitch.svelte";
 </script>
 
-<div class="min-h-screen flex flex-col justify-center items-center gap-6 py-20">
+<div class="min-h-screen flex flex-col justify-center items-center gap-6 py-14 sm:py-20">
   <div class="flex gap-4">
     <h1 class="text-2xl font-semibold">10X Training</h1>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
@@ -13,14 +13,14 @@
   </div>
   <div class="flex flex-col items-center gap-4 p-4">
     <ModeSwitch />
-    <p class="text-xs">Highscores can be submitted in 10x mode only!</p>
+    <p class="text-center text-balance text-xs">Highscores can be submitted in 10x mode only!</p>
   </div>
   <div class="container">
     <div class="w-full grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-4">
       {#each games as game}
         <div class="text-center flex flex-col gap-4 bg-secondary/10 p-6 rounded-xl">
-          <h2 class="text-lg font-semibold leading-3">{game.name}</h2>
-          <p class="text-sm">{game.description}</p>
+          <h2 class="text-lg text-balance font-semibold leading-3">{game.name}</h2>
+          <p class="text-sm text-pretty">{game.description}</p>
           <div class="mt-auto mx-auto flex gap-2">
             <a href="{`/play/${game.slug}`}" class="button">Play</a>
             <a href="{`/leaderboard/${game.slug}`}" class="button">Leaderboard</a>

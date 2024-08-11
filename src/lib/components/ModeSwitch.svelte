@@ -11,10 +11,28 @@
 
     updateDb();
   }
+
+  function selectNoobMode() {
+    $isEasyMode = true;
+
+    updateDb();
+  }
+
+  function select10xMode() {
+    $isEasyMode = false;
+
+    updateDb();
+  }
 </script>
 
-<div class="flex gap-4">
-  <span class:opacity-50={!$isEasyMode} class="select-none transition-opacity duration-300">Noob</span>
+<div class="flex items-center gap-4">
+  <button
+    class:opacity-50={!$isEasyMode}
+    class="select-none transition-opacity duration-300 cursor-auto"
+    on:click={selectNoobMode}
+  >
+    Noob
+  </button>
   <div
     class="relative w-10 h-6 ring ring-2 ring-secondary rounded-full active:bg-secondary/10 transition-all duration-300 cursor-pointer"
     on:click={toggleMode}
@@ -25,5 +43,11 @@
       on:transitionend={updateDb}
     ></div>
   </div>
-  <span class:opacity-50={$isEasyMode} class="select-none transition-opacity duration-300">10x</span>
+  <button
+    class:opacity-50={$isEasyMode}
+    class="select-none transition-opacity duration-300 cursor-auto"
+    on:click={select10xMode}
+  >
+    10x
+  </button>
 </div>

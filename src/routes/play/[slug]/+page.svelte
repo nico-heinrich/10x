@@ -12,6 +12,7 @@
   import wonSoundSrc from '$lib/sounds/won.wav';
   import lostSoundSrc from '$lib/sounds/lost.wav';
   import { isEasyMode } from '$lib/stores/preferences';
+  import { enhance } from '$app/forms';
 
   const soundCollection = [
     { name: 'match', src: matchSoundSrc },
@@ -32,8 +33,7 @@
   let timer;
   let askBeforeLeaveDialog;
   let isShaking = false;
-
-  console.log($page.params.name)
+  let ranking = null;
 
   const allPairs = games.find(game => game.slug === $page.params.slug).pairs[$isEasyMode ? "easy" : "all"];
 
@@ -113,20 +113,33 @@
     setUp();
   }
 
-  function handleGameEnd() {
-    hasEnded = true;
+  async function handleGameEnd() {
     timer?.stop();
 
     if (lifes === 0 || score < 1) {
       sounds.lost.play();
     } else {
+      if (!$isEasyMode) await updateRanking();
       sounds.won.play();
     }
+
+    hasEnded = true;
   }
 
   function openAskBeforeLeaveDialog() {
     timer?.stop();
     askBeforeLeaveDialog.open();
+  }
+
+  async function updateRanking() {
+    const res = await fetch(`/api/leaderboard/${$page.params.slug}`);
+    const data = await res.json();
+
+    ranking = data.find((item, index) => {
+      if (item.score < score) {
+        return index + 1;
+      }
+    });
   }
 
   onMount(setUp);
@@ -148,7 +161,18 @@
         <!-- Won Screen -->
         <div class="space-y-4">
           <h1 class="text-4xl font-bold">Wohoo!</h1>
-          <p>You've completed the game with a score of {score}!</p>
+          {#if (!$isEasyMode && ranking)}
+            <p>You've completed the game with a score of {score} and ranked {ranking}!</p>
+            <p>Submit your score to the leaderboard if you want to:</p>
+            <form action="?/submit" use:enhance>
+              <input type="hidden" name="score" value={score}>
+              <input type="hidden" name="game" value={$page.params.slug}>
+              <input type="text" name="name" placeholder="Your name">
+              <button class="button">Submit</button>
+            </form>
+          {:else}
+            <p>You've completed the game with a score of {score}!</p>
+          {/if}
         </div>
       {/if}
       <div class="w-40 flex flex-col gap-2">
@@ -165,6 +189,12 @@
       class:is-shaking={isShaking}
     >
       <header class="flex justify-between items-center gap-4 p-4">
+        <button on:click={openAskBeforeLeaveDialog}>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
+            <path fill-rule="evenodd" d="M17 4.25A2.25 2.25 0 0 0 14.75 2h-5.5A2.25 2.25 0 0 0 7 4.25v2a.75.75 0 0 0 1.5 0v-2a.75.75 0 0 1 .75-.75h5.5a.75.75 0 0 1 .75.75v11.5a.75.75 0 0 1-.75.75h-5.5a.75.75 0 0 1-.75-.75v-2a.75.75 0 0 0-1.5 0v2A2.25 2.25 0 0 0 9.25 18h5.5A2.25 2.25 0 0 0 17 15.75V4.25Z" clip-rule="evenodd" />
+            <path fill-rule="evenodd" d="M14 10a.75.75 0 0 0-.75-.75H3.704l1.048-.943a.75.75 0 1 0-1.004-1.114l-2.5 2.25a.75.75 0 0 0 0 1.114l2.5 2.25a.75.75 0 1 0 1.004-1.114l-1.048-.943h9.546A.75.75 0 0 0 14 10Z" clip-rule="evenodd" />
+          </svg>
+        </button>
         <ScoreDisplay {score} />
         <div class="flex flex-row-reverse gap-1 ml-auto">
           {#each Array(lifes) as _, index (index)}
@@ -181,11 +211,6 @@
           {/each}
         </div>
         <Timer minutes="1" onEnd={handleGameEnd} bind:this={timer} />
-        <button on:click={openAskBeforeLeaveDialog}>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM8.28 7.22a.75.75 0 0 0-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 1 0 1.06 1.06L10 11.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L11.06 10l1.72-1.72a.75.75 0 0 0-1.06-1.06L10 8.94 8.28 7.22Z" clip-rule="evenodd" />
-          </svg>
-        </button>
       </header>
       {#if isPlaying}
         <div class="h-full flex justify-center items-center overflow-hidden px-4">
@@ -198,11 +223,15 @@
 
 <!-- Ask Before Leave Dialog -->
 <Modal bind:this={askBeforeLeaveDialog} onClose={timer?.start}>
-  <h2 class="text-xl font-bold">Are you sure you want to leave?</h2>
-  <p>Your achievements will be lost!</p>
-  <div class="flex justify-end gap-2 mt-4">
-    <button class="button">No, resume</button>
-    <a href="/" class="button">Yes</a>
+  <div class="space-y-4">
+    <div class="space-y-2">
+      <h2 class="text-xl text-balance font-bold">Are you sure you want to leave?</h2>
+      <p class="text-balance">Your achievements will be lost!</p>
+    </div>
+    <div class="flex justify-end gap-2 mt-4">
+      <button class="button">No, resume</button>
+      <a href="/" class="button">Yes</a>
+    </div>
   </div>
 </Modal>
 

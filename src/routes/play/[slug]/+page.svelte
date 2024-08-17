@@ -149,6 +149,17 @@
   }
 
   onMount(setUp);
+  /*
+  onMount(() => {
+    setUp();
+
+    setTimeout(() => {
+      score = 1000;
+
+      handleGameEnd();
+    }, 1000);
+  });
+  */
 </script>
 
 {#if hasEnded}
@@ -184,6 +195,7 @@
               <input type="hidden" name="score" value={score}>
               <input type="hidden" name="game" value={$page.params.slug}>
               <SubmitScoreInput name="name" value={form?.name} success={form?.success} error={form?.error} {isFormLoading} />
+              <input type="checkbox" name="terms" id="terms" required>
             </form>
           {:else}
             <p>You've completed the game with a score of {score}!</p>

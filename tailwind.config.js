@@ -7,6 +7,9 @@ export default {
         primary: "#fff",
         secondary: "#7c5cff",
       },
+      spacing: {
+        "h-screen": "100svh",
+      },
     },
   },
   plugins: [],

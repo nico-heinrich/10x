@@ -29,5 +29,9 @@
       {/each}
     </div>
   </div>
-  <p class="text-sm">Made with ❤️  by Nico Heinrich </p>
+  <p class="text-sm">
+    Made with ❤️  by Nico Heinrich &copy; {new Date().getFullYear()} |
+    <a href="/imprint" class="underline">Imprint</a>
+    <a href="/privacy" class="underline">Privacy</a>
+  </p>
 </div>

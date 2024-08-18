@@ -22,6 +22,7 @@ body {
   transition: all .1s;
   appearance: none;
   outline: none;
+  touch-action: none;
 }
 
 .button:active {
@@ -53,6 +54,7 @@ body {
   padding: theme("spacing.2");
   margin: calc(theme("spacing.2") * -1);
   border-radius: 9999px;
+  touch-action: none;
 }
 
 .icon-button:active {
@@ -95,4 +97,9 @@ dialog[open]::backdrop {
   dialog[open]::backdrop {
     opacity: 0;
   }
+}
+
+.prose,
+.prose * {
+  color: theme("colors.secondary") !important;
 }

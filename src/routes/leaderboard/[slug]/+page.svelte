@@ -20,7 +20,7 @@
   onMount(getTopTen);
 </script>
 
-<div class="h-svh flex flex-col justify-center gap-6 py-14 sm:py-20">
+<div class="h-svh flex flex-col justify-center gap-6" style="padding-bottom: env(safe-area-inset-bottom);">
   <div class="container">
     <div class="h-[30.5rem] space-y-4">
       <div class="flex gap-4 items-center">

@@ -174,7 +174,8 @@
 {#if hasEnded}
   <!-- Pause / End Screen -->
   <div
-    class="h-screen flex justify-center items-center p-4"
+    class="h-svh flex justify-center items-center p-4"
+    style="padding-bottom: env(safe-area-inset-bottom);"
   >
     <div class="flex flex-col items-center text-center space-y-8">
       {#if lifes === 0 || score < 1}
@@ -239,8 +240,9 @@
 <!-- Game Screen -->
   <div class="overflow-hidden">
     <div
-      class="h-screen flex flex-col"
+      class="h-svh flex flex-col"
       class:is-shaking={isShaking}
+      style="padding-bottom: env(safe-area-inset-bottom);"
     >
       <header class="fixed left-0 right-0 flex justify-between items-center gap-4 p-4 z-10">
         <button on:click={openAskBeforeLeaveDialog} class="icon-button">
@@ -271,7 +273,10 @@
           <Pairs {pairs} onMatch={addToScore} onMismatch={removeLife} onEnd={handleRoundEnd} />
         </div>
       {/if}
-      <footer class="fixed left-0 bottom-0 right-0 flex justify-center items-center gap-4 p-4 z-10 text-secondary/50">
+      <footer
+        class="fixed left-0 bottom-0 right-0 flex justify-center items-center gap-4 p-4 z-10 text-secondary/50"
+        style="padding-bottom: max(1rem, env(safe-area-inset-bottom));"
+      >
         {gameName}
       </footer>
     </div>
@@ -287,7 +292,7 @@
     </div>
     <div class="flex justify-end gap-2 mt-4">
       <button class="button">Weiterspielen</button>
-      <a href="/" class="button">Ja, beenden</a>
+      <a href="/" class="button">Ja</a>
     </div>
   </div>
 </Modal>

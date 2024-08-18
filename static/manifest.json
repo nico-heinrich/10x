@@ -4,7 +4,7 @@
   "start_url": ".",
   "display": "standalone",
   "background_color": "#fff",
-  "theme_color": "#7c5cff",
+  "theme_color": "#fff",
   "orientation": "portrait",
   "description": "Become a 10x developer the playful way!",
   "icons": [

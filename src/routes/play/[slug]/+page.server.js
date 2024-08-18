@@ -19,17 +19,22 @@ export const actions = {
     const name = data.get('name');
     const score = data.get('score');
     const game = data.get('game');
+    const terms = data.get('terms');
 
     if (!name) {
-      return fail(400, { error: "What is your name?", name });
+      return fail(400, { error: "Gib einen Namen an!", name });
     }
 
     if (name.length < 2) {
-      return fail(400, { error: "Your name is too short!", name});
+      return fail(400, { error: "Dein Name ist zu kurz!", name});
     }
 
     if (name.length > 20) {
-      return fail(400, { error: "Your name is too long!", name});
+      return fail(400, { error: "Dein Name ist zu lang!", name});
+    }
+
+    if (!terms) {
+      return fail(400, { error: "Du musst die Datenschutzerklärung akzeptieren!" });
     }
 
     await notion.pages.create({

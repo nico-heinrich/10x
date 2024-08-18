@@ -2,7 +2,7 @@ export const games = [
   {
     slug: "rem-px",
     name: "Rems & Pixels",
-    description: "Master the art of responsive design! Dive into the world of CSS units and sharpen your skills by converting between rems and pixels. Perfect for those looking to level up their front-end development game.",
+    description: "Rems sind der Pixeleinheit deutlich überlegen, wenn es um responsives Design geht. Schärfe spielerisch deine Fähigkeiten beim Umrechnen!",
     pairs: {
       easy: [
         ["1rem", "16px"],
@@ -15,7 +15,7 @@ export const games = [
         ["8rem", "128px"],
         ["10rem", "160px"],
       ],
-      all: [
+      tenx: [
         ["0.125rem", "2px"],
         ["0.25rem", "4px"],
         ["0.375rem", "6px"],
@@ -44,7 +44,7 @@ export const games = [
   {
     slug: "tw-rem",
     name: "Tailwind Spacing & Rems",
-    description: "Ready to flex your Tailwind knowledge? Match the framework’s spacing units with their rem equivalents and become a pro at scaling designs across different devices.",
+    description: "Bereit, deine Tailwind-Skills zu upgraden? Ordne die Abstands-Einheiten ihren Rem-Äquivalenten zu und schreibe Tailwind bald ohne nachzudenken!",
     pairs: {
       easy: [
         ["1", "0.25rem"],
@@ -58,7 +58,7 @@ export const games = [
         ["32", "8rem"],
         ["48", "12rem"],
       ],
-      all: [
+      tenx: [
         ["1", "0.25rem"],
         ["1.5", "0.375rem"],
         ["2", "0.5rem"],
@@ -97,7 +97,7 @@ export const games = [
   {
     slug: "tw-px",
     name: "Tailwind Spacing & Pixels",
-    description: "Ready to flex your Tailwind knowledge? Match the framework’s spacing units with their pixel equivalents and become a pro at scaling designs across different devices.",
+    description: "Bereit, deine Tailwind-Skills zu upgraden? Ordne die Abstands-Einheiten ihren Pixel-Äquivalenten zu und schreibe Tailwind bald ohne nachzudenken!",
     pairs: {
       easy: [
         ["1", "4px"],
@@ -111,7 +111,7 @@ export const games = [
         ["32", "128px"],
         ["48", "192px"],
       ],
-      all: [
+      tenx: [
         ["1", "4px"],
         ["1.5", "6px"],
         ["2", "8px"],
@@ -149,8 +149,8 @@ export const games = [
   },
   {
     slug: "hsl-color-names",
-    name: "HSL & Color Names",
-    description: "Unlock the power of color theory! Convert HSL values into color names and bring your designs to life with vivid hues. Perfect for anyone looking to enhance their design precision.",
+    name: "HSL & Farbnamen",
+    description: "Entschlüssele die Sprache der Farben! Wandle HSL-Werte in intuitive Farbnamen um und gewinne spielerisch ein Verständnis dafür, wie HSL funktioniert.",
     pairs: {
       easy: [
         ["0, 100%, 50%", "red"],
@@ -162,14 +162,22 @@ export const games = [
         ["0, 0%, 100%", "white"],
         ["0, 0%, 50%", "gray"],
       ],
-      all: [
+      tenx: [
         ["0, 100%, 50%", "red"],
+        ["15, 100%, 50%", "orangered"],
         ["30, 100%, 50%", "orange"],
+        ["45, 100%, 50%", "gold"],
         ["60, 100%, 50%", "yellow"],
-        ["120, 100%, 50%", "green"],
-        ["180, 100%, 50%", "cyan"],
-        ["240, 100%, 50%", "blue"],
-        ["300, 100%, 50%", "magenta"],
+        ["75, 100%, 50%", "lime"],
+        ["90, 100%, 50%", "green"],
+        ["120, 100%, 50%", "cyan"],
+        ["135, 100%, 50%", "lightblue"],
+        ["150, 100%, 50%", "dodgerblue"],
+        ["180, 100%, 50%", "blue"],
+        ["210, 100%, 50%", "darkblue"],
+        ["240, 100%, 50%", "purple"],
+        ["270, 100%, 50%", "magenta"],
+        ["300, 100%, 50%", "violet"],
         ["0, 0%, 0%", "black"],
         ["0, 0%, 100%", "white"],
         ["0, 0%, 50%", "gray"],
@@ -178,8 +186,8 @@ export const games = [
   },
   {
     slug: "hex-color-names",
-    name: "Hex & Color Names",
-    description: "Decode the language of color! Transform hex codes into recognizable color names, and get a deeper understanding of how colors interact in web design.",
+    name: "Hex & Farbnamen",
+    description: "Entschlüssele die Sprache der Farben! Wandle Hex-Codes in intuitive Farbnamen um und gewinne spielerisch ein Verständnis dafür, wie Hex-Codes funktionieren.",
     pairs: {
       easy: [
         ["#ff0000", "red"],
@@ -189,18 +197,66 @@ export const games = [
         ["#0000ff", "blue"],
         ["#000000", "black"],
         ["#ffffff", "white"],
+        ["#808080", "gray"],
       ],
-      all: [
+      tenx: [
         ["#ff0000", "red"],
+        ["#ff4500", "orangered"],
         ["#ffa500", "orange"],
         ["#ffff00", "yellow"],
+        ["#808000", "olive"],
+        ["#00ff00", "lime"],
         ["#008000", "green"],
         ["#00ffff", "cyan"],
+        ["#add8e6", "lightblue"],
+        ["#1e90ff", "dodgerblue"],
         ["#0000ff", "blue"],
+        ["#191970", "midnightblue"],
+        ["#800080", "purple"],
         ["#ff00ff", "magenta"],
+        ["#ee82ee", "violet"],
         ["#000000", "black"],
         ["#ffffff", "white"],
+        ["#d3d3d3", "lightgray"],
         ["#808080", "gray"],
+      ]
+    }
+  },
+  {
+    slug: "rgb-color-names",
+    name: "RGB & Farbnamen",
+    description: "Entschlüssele die Sprache der Farben! Wandle RGB-Werte in intuitive Farbnamen um und gewinne spielerisch ein Verständnis dafür, wie RGB funktioniert.",
+    pairs: {
+      easy: [
+        ["255, 0, 0", "red"],
+        ["255, 165, 0", "orange"],
+        ["255, 255, 0", "yellow"],
+        ["0, 128, 0", "green"],
+        ["0, 0, 255", "blue"],
+        ["0, 0, 0", "black"],
+        ["255, 255, 255", "white"],
+        ["128, 128, 128", "gray"],
+      ],
+      tenx: [
+        ["255, 0, 0", "red"],
+        ["255, 69, 0", "orangered"],
+        ["255, 165, 0", "orange"],
+        ["255, 255, 0", "yellow"],
+        ["128, 128, 0", "olive"],
+        ["0, 255, 0", "lime"],
+        ["0, 128, 0", "green"],
+        ["0, 255, 255", "cyan"],
+        ["173, 216, 230", "lightblue"],
+        ["30, 144, 255", "dodgerblue"],
+        ["0, 0, 255", "blue"],
+        ["25, 25, 112", "midnightblue"],
+        ["128, 0, 128", "purple"],
+        ["255, 0, 255", "magenta"],
+        ["238, 130, 238", "violet"],
+        ["0, 0, 0", "black"],
+        ["255, 255, 255", "white"],
+        ["211, 211, 211", "lightgray"],
+        ["128, 128, 128", "gray"],
       ]
     }
   }

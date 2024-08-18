@@ -11,9 +11,10 @@
   import matchSoundSrc from '$lib/sounds/match.wav';
   import levelSoundSrc from '$lib/sounds/level.wav';
   import wonSoundSrc from '$lib/sounds/won.wav';
-  import lostSoundSrc from '$lib/sounds/lost.wav';
-  import { isEasyMode } from '$lib/stores/preferences';
+  import lostSoundSrc from '$lib/sounds/lost.mp3';
+  import { isEasyMode, userName } from '$lib/stores/preferences';
   import { enhance } from '$app/forms';
+  import { goto } from '$app/navigation';
 
   export let form;
   let isFormLoading = false;
@@ -39,7 +40,8 @@
   let isShaking = false;
   let ranking = null;
 
-  const allPairs = games.find(game => game.slug === $page.params.slug).pairs[$isEasyMode ? "easy" : "all"];
+  const gameName = games.find(game => game.slug === $page.params.slug).name;
+  const allPairs = games.find(game => game.slug === $page.params.slug).pairs[$isEasyMode ? "easy" : "tenx"];
 
   function handleRoundEnd() {
     isPlaying = false;
@@ -132,6 +134,12 @@
   }
 
   function openAskBeforeLeaveDialog() {
+    if (score === 0) {
+      goto("/");
+
+      return;
+    }
+
     timer?.stop();
     askBeforeLeaveDialog.open();
   }
@@ -148,24 +156,25 @@
     ranking = data.findIndex(item => item.score < score) + 1;
   }
 
+  function getPostiveReaction() {
+    const reactions = {
+      mild: ["Gut gemacht!", "Weiter so!", "Nicht schlecht!"],
+      medium: ["Super!", "Fantastisch!", "Perfekt!"],
+      high: ["Wahnsinn!", "Unglaublich!", "Genial!"],
+    }
+
+    const intensity = score < 50 ? "mild" : score < 100 ? "medium" : "high";
+
+    return reactions[intensity][Math.floor(Math.random() * reactions[intensity].length)];
+  }
+
   onMount(setUp);
-  /*
-  onMount(() => {
-    setUp();
-
-    setTimeout(() => {
-      score = 1000;
-
-      handleGameEnd();
-    }, 1000);
-  });
-  */
 </script>
 
 {#if hasEnded}
   <!-- Pause / End Screen -->
   <div
-    class="h-screen flex justify-center items-center p-16"
+    class="h-screen flex justify-center items-center p-4"
   >
     <div class="flex flex-col items-center text-center space-y-8">
       {#if lifes === 0 || score < 1}
@@ -173,38 +182,56 @@
         <div class="space-y-4">
           <h1 class="text-4xl font-bold">Oh snap!</h1>
           {#if lifes === 0}
-            <p class="text-balance">You've  run out of lives!</p>
+            <p class="text-balance">Dir sind die Leben ausgegangen!</p>
           {:else if score < 1}
-            <p class="text-balance">Did you fell asleep?</p>
+            <p class="text-balance">Bist du eingeschlafen?</p>
           {/if}
         </div>
       {:else}
         <!-- Won Screen -->
         <div class="space-y-4">
-          <h1 class="text-4xl font-bold">Wohoo!</h1>
+          <h1 class="text-4xl font-bold">{getPostiveReaction()}</h1>
           {#if (!$isEasyMode && ranking)}
-            <p class="text-balance">You've completed the game with a score of {score} and ranked {ranking} on the leaderboard!</p>
-            <p class="text-balance">Submit your score if you want to:</p>
-            <form method="POST" action="?/submit" use:enhance={() => {
-              isFormLoading = true;
-              return async ({ update }) => {
-                await update();
-                isFormLoading = false;
-              }
-            }}>
-              <input type="hidden" name="score" value={score}>
-              <input type="hidden" name="game" value={$page.params.slug}>
-              <SubmitScoreInput name="name" value={form?.name} success={form?.success} error={form?.error} {isFormLoading} />
-              <input type="checkbox" name="terms" id="terms" required>
-            </form>
+            <p class="text-balance">Du hast mit {score} Punkten den {ranking}. Platz erreicht!</p>
+            {#if !form?.success}
+              <p class="text-balance">Trage deinen Namen ein, um deinen Highscore zu veröffentlichen:</p>
+              <form method="POST" action="?/submit" use:enhance={() => {
+                isFormLoading = true;
+                return async ({ update }) => {
+                  await update();
+                  isFormLoading = false;
+                }
+              }}>
+                <input type="hidden" name="score" value={score}>
+                <input type="hidden" name="game" value={$page.params.slug}>
+                <div class="space-y-2">
+                  <SubmitScoreInput name="name" value={form?.name || $userName} {isFormLoading} />
+                  <label class="block text-sm">
+                    <input
+                      type="checkbox"
+                      name="terms"
+                      id="terms"
+                      class="accent-secondary size-4 translate-y-0.5"
+                      disabled={isFormLoading}
+                    >
+                    <span>Ich habe die <a href="/privacy" target="_blank" class="underline">Datenschutz&shy;erklärung</a> gelesen und bin einverstanden.</span>
+                  </label>
+                  {#if form?.error}
+                    <div class="text-error text-sm">{form.error}</div>
+                  {/if}
+                </div>
+              </form>
+            {:else}
+              <p class="text-balance font-semibold">Dein Highscore wurde veröffentlicht.</p>
+            {/if}
           {:else}
-            <p>You've completed the game with a score of {score}!</p>
+            <p>Du hast {score} Punkte erreicht!</p>
           {/if}
         </div>
       {/if}
-      <div class="w-40 flex flex-col gap-2">
-        <button class="button" on:click={restart}>Restart</button>
-        <a href="/" class="button">Menu</a>
+      <div class="w-60 flex flex-col gap-2">
+        <button class="button" on:click={restart}>Nochmal spielen</button>
+        <a href="/" class="button">Home</a>
       </div>
     </div>
   </div>
@@ -237,13 +264,16 @@
             </svg>
           {/each}
         </div>
-        <Timer minutes="10" onEnd={handleGameEnd} bind:this={timer} />
+        <Timer minutes="1" onEnd={handleGameEnd} bind:this={timer} />
       </header>
       {#if isPlaying}
         <div class="h-full flex justify-center items-center overflow-hidden">
           <Pairs {pairs} onMatch={addToScore} onMismatch={removeLife} onEnd={handleRoundEnd} />
         </div>
       {/if}
+      <footer class="fixed left-0 bottom-0 right-0 flex justify-center items-center gap-4 p-4 z-10 text-secondary/50">
+        {gameName}
+      </footer>
     </div>
   </div>
 {/if}
@@ -252,12 +282,12 @@
 <Modal bind:this={askBeforeLeaveDialog} onClose={timer?.start}>
   <div class="space-y-4">
     <div class="space-y-2">
-      <h2 class="text-xl text-balance font-bold">Are you sure you want to leave?</h2>
-      <p class="text-balance">Your achievements will be lost!</p>
+      <h2 class="text-xl text-balance font-semibold">Willst du das Spiel beenden?</h2>
+      <p class="text-balance">Dein aktueller Fortschritt geht dabei verloren.</p>
     </div>
     <div class="flex justify-end gap-2 mt-4">
-      <button class="button">No, resume</button>
-      <a href="/" class="button">Yes</a>
+      <button class="button">Weiterspielen</button>
+      <a href="/" class="button">Ja, beenden</a>
     </div>
   </div>
 </Modal>

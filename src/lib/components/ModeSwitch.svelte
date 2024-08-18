@@ -31,7 +31,7 @@
     class="select-none transition-opacity duration-300 cursor-auto"
     on:click={selectNoobMode}
   >
-    Noob
+    Easy
   </button>
   <div
     class="relative w-10 h-6 ring ring-2 ring-secondary rounded-full active:bg-secondary/10 transition-all duration-300 cursor-pointer"

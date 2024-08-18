@@ -33,6 +33,7 @@ body {
   .button {
     box-shadow: 0 0 0 2px theme("colors.secondary") inset;
     transform: translateY(0);
+    white-space: nowrap;
   }
 
   .button:hover {
@@ -48,6 +49,7 @@ body {
 }
 
 .icon-button {
+  display: inline-flex;
   padding: theme("spacing.2");
   margin: calc(theme("spacing.2") * -1);
   border-radius: 9999px;

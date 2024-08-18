@@ -6,12 +6,13 @@ export default {
       colors: {
         primary: "#fff",
         secondary: "#7c5cff",
-      },
-      spacing: {
-        "h-screen": "100svh",
+        error: "#ff0050",
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/typography'),
+    // ...
+  ],
 }
 

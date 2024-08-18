@@ -1,7 +1,7 @@
 export const games = [
   {
     slug: "rem-px",
-    name: "Rems & Pixels",
+    name: "Rem & Pixel",
     description: "Rems sind der Pixeleinheit deutlich überlegen, wenn es um responsives Design geht. Schärfe spielerisch deine Fähigkeiten beim Umrechnen!",
     pairs: {
       easy: [
@@ -43,7 +43,7 @@ export const games = [
   },
   {
     slug: "tw-rem",
-    name: "Tailwind Spacing & Rems",
+    name: "Tailwind Spacing & Rem",
     description: "Bereit, deine Tailwind-Skills zu upgraden? Ordne die Abstands-Einheiten ihren Rem-Äquivalenten zu und schreibe Tailwind bald ohne nachzudenken!",
     pairs: {
       easy: [
@@ -96,7 +96,7 @@ export const games = [
   },
   {
     slug: "tw-px",
-    name: "Tailwind Spacing & Pixels",
+    name: "Tailwind Spacing & Pixel",
     description: "Bereit, deine Tailwind-Skills zu upgraden? Ordne die Abstands-Einheiten ihren Pixel-Äquivalenten zu und schreibe Tailwind bald ohne nachzudenken!",
     pairs: {
       easy: [

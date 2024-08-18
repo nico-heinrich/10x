@@ -195,7 +195,7 @@
           {#if (!$isEasyMode && ranking)}
             <p class="text-balance">Du hast mit {score} Punkten den {ranking}. Platz erreicht!</p>
             {#if !form?.success}
-              <p class="text-balance">Trage deinen Namen ein, um deinen Highscore zu veröffentlichen:</p>
+              <p class="text-balance">Trage einen Namen ein, um deinen Highscore zu veröffentlichen:</p>
               <form method="POST" action="?/submit" use:enhance={() => {
                 isFormLoading = true;
                 return async ({ update }) => {

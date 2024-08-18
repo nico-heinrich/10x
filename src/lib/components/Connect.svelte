@@ -6,121 +6,105 @@
   let container;
 
   let isPointerDown = false;
-  let currentStartTarget = null;
-  let currentId = 0;
-  let lines = [];
+  let startTarget = null;
   let isConnectable = false;
+  let x1, y1, x2, y2;
 
-  function handlePointerdown(event) {
+  function handlePointerDown(event) {
     isPointerDown = true;
 
     const target = event.target.closest("[data-connect]");
-    currentStartTarget = target;
+    startTarget = target;
+    const connectFrom = target.dataset.connect;
 
     if (!target) return;
 
     onConnectStart(target);
  
-    const boundingRect = container.getBoundingClientRect();
-    const x1 = event.clientX - boundingRect.left;
-    const y1 = event.clientY - boundingRect.top;
-    const id = Date.now();
-    currentId = id;
-
-    lines = [...lines, { x1, y1, x2: x1, y2: y1, id, transitionOut: false }];
+    const containerBoundingRect = container.getBoundingClientRect();
+    const targetBoundingRect = target.getBoundingClientRect();
+    x1 = targetBoundingRect.left + (connectFrom === "right" ? targetBoundingRect.width : 0) - containerBoundingRect.left;
+    y1 = targetBoundingRect.top + targetBoundingRect.height / 2 - containerBoundingRect.top;
   }
 
-  function handlePointerup(event) {
+  function handlePointerUp(event) {
     isPointerDown = false;
 
-    const target = document.elementFromPoint(event.clientX, event.clientY).closest("[data-connect]");
+    const target = document.elementFromPoint(event.clientX, event.clientY)?.closest("[data-connect]");
 
-    onConnectEnd(target);
+    onConnectEnd(target, startTarget);
 
-    if (target && target !== currentStartTarget && isConnectable) {
-      removeLine(currentId);
-    } else {
-      removeLine(currentId, true);
-    }
+    removeLine();
 
-    currentStartTarget = null;
-    currentId = 0;
+    startTarget = null;
   }
 
-  function handlePointermove(event) {
+  function handlePointerMove(event) {
     if (!isPointerDown) return;
 
-    const target = document.elementFromPoint(event.clientX, event.clientY).closest("[data-connect]");
+    const target = document.elementFromPoint(event.clientX, event.clientY)?.closest("[data-connect]");
 
-    if (target && target.dataset.connect !== currentStartTarget.dataset.connect) {
-      isConnectable = target !== currentStartTarget;
+    if (target && target === startTarget) {
+      console.log("same target");
+      x2 = x1;
+      y2 = y1;
+
+      return;
+    };
+
+    if (target && target.dataset.connect !== startTarget.dataset.connect) {
+      isConnectable = target !== startTarget;
+
+      const containerBoundingRect = container.getBoundingClientRect();
+      const targetBoundingRect = target.getBoundingClientRect();
+      x2 = targetBoundingRect.left + (target.dataset.connect === "left" ? 0 : targetBoundingRect.width) - containerBoundingRect.left;
+      y2 = targetBoundingRect.top + targetBoundingRect.height / 2 - containerBoundingRect.top;
     } else {
       isConnectable = false;
+
+      const boundingRect = container.getBoundingClientRect();
+      x2 = event.clientX - boundingRect.left;
+      y2 = event.clientY - boundingRect.top;
     }
 
     onConnectHover(target);
-
-    const boundingRect = container.getBoundingClientRect();
-    const x2 = event.clientX - boundingRect.left;
-    const y2 = event.clientY - boundingRect.top;
-
-    lines = lines.map((line) => {
-      if (line.id === currentId) {
-        return { ...line, x2, y2 };
-      }
-
-      return line;
-    });
   }
 
   function handlePointerLeave() {
     isPointerDown = false;
 
-    removeLine(currentId, true);
+    removeLine();
   }
 
-  function removeLine(id, immediate = false) {
-    if (immediate) {
-      lines = lines.filter((line) => line.id !== id);
-      return;
-    }
-
-    lines = lines.map((line) => {
-      if (line.id === id) {
-        return { ...line, transitionOut: true };
-      }
-
-      return line;
-    });
-
-    setTimeout(() => {
-      lines = lines.filter((line) => line.id !== id);
-    }, 300);
+  function removeLine() {
+    x1 = undefined;
+    y1 = undefined;
+    x2 = undefined;
+    y2 = undefined;
+    startTarget = null;
   }
 </script>
 
 <div
   bind:this={container}
-  on:pointerdown={handlePointerdown}
-  on:pointermove={handlePointermove}
-  on:pointerup={handlePointerup}
+  on:pointerdown={handlePointerDown}
+  on:pointermove={handlePointerMove}
+  on:pointerup={handlePointerUp}
   on:pointerleave={handlePointerLeave}
 >
   <svg xmlns="http://www.w3.org/2000/svg" class="text-secondary">
-    {#each lines as { x1, y1, x2, y2, transitionOut }, id}
-      <line
-        key={id}
-        x1={x1}
-        y1={y1}
-        x2={x2}
-        y2={y2}
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-dasharray={isConnectable ? "0" : "5"}
-        class:transition-out={transitionOut}
-      />
-    {/each}
+    <path
+      d="M{x1},{y1} {y1 === y2 ? `L${x2},${y2}` : `C${(x1+x2)/2},${y1} ${(x1+x2)/2},${y2} ${x2},${y2}`}"
+      stroke="currentColor"
+      fill="none"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-dasharray={isConnectable ? "0" : "1, 5"}
+    />
+    {#if isPointerDown && startTarget}
+      <circle cx={x1} cy={y1} r="4" fill="currentColor" />
+      <circle cx={x2 || x1} cy={y2 || y1} r="4" fill="currentColor" />
+    {/if}
   </svg>
   <slot />
 </div>
@@ -143,8 +127,12 @@
     z-index: 9999;
   }
 
-  .transition-out {
-    opacity: 0;
-    transition: all 300ms ease-out;
+  @keyframes flow {
+    0% {
+      stroke-dashoffset: 0;
+    }
+    100% {
+      stroke-dashoffset: -20;
+    } 
   }
 </style>

@@ -12,23 +12,55 @@ body {
 
 .button {
   position: relative;
-  box-shadow: 0 0 0 2px theme("colors.secondary") inset;
+  box-shadow: 0 0 0 2px theme("colors.secondary") inset,
+                0 3px theme("colors.secondary / 50%");
   padding: theme("spacing.4") theme("spacing.6");
   border-radius: theme("borderRadius.lg");
   background-color: theme("colors.primary");
   text-align: center;
-  transition: all .1s;
-}
-
-.button:hover {
-  box-shadow: 0 0 0 2px theme("colors.secondary") inset,
-              0 3px theme("colors.secondary / 50%");
   transform: translateY(-3px);
+  transition: all .1s;
+  appearance: none;
+  outline: none;
 }
 
 .button:active {
   box-shadow: 0 0 0 2px theme("colors.secondary") inset;
   transform: translateY(0);
+}
+
+@media (hover: hover) {
+  .button {
+    box-shadow: 0 0 0 2px theme("colors.secondary") inset;
+    transform: translateY(0);
+  }
+
+  .button:hover {
+    box-shadow: 0 0 0 2px theme("colors.secondary") inset,
+                0 3px theme("colors.secondary / 50%");
+    transform: translateY(-3px);
+  }
+
+  .button:active {
+    box-shadow: 0 0 0 2px theme("colors.secondary") inset;
+    transform: translateY(0);
+  }
+}
+
+.icon-button {
+  padding: theme("spacing.2");
+  margin: calc(theme("spacing.2") * -1);
+  border-radius: 9999px;
+}
+
+.icon-button:active {
+  background-color: theme("colors.secondary / 15%");
+}
+
+@media (hover: hover) {
+  .icon-button:hover {
+    background-color: theme("colors.secondary / 15%");
+  }
 }
 
 dialog {

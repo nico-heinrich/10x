@@ -7,7 +7,7 @@
       </svg>
     </a>
     <div class="prose mt-8">
-      <h1>Datenschutzerklärung</h1>
+      <h1>Datenschutz&shy;erklärung</h1>
       <p><strong>Stand: August 2024</strong></p>
 
       <h2>1. Verantwortliche Stelle</h2>

@@ -5,6 +5,7 @@
   export let minutes = 0;
   export let milliseconds = 0;
   export let onEnd = () => {};
+  export let onSecondPassed = () => {};
 
   let interval;
 
@@ -15,6 +16,7 @@
       if (milliseconds < 0) {
         milliseconds = 99;
         seconds--;
+        onSecondPassed(seconds);
       }
 
       if (seconds < 0) {

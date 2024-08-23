@@ -6,8 +6,6 @@
 
     const sources = Object.keys(sounds);
 
-    console.log(sources);
-
     export function play(sound) {
         const src = sources.find((source) => source.split('/').pop().split('.').shift().toLowerCase() === sound.toLowerCase());
         const audio = new Audio(src);

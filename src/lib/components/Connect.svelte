@@ -45,7 +45,6 @@
     const target = document.elementFromPoint(event.clientX, event.clientY)?.closest("[data-connect]");
 
     if (target && target === startTarget) {
-      console.log("same target");
       x2 = x1;
       y2 = y1;
 

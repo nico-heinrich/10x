@@ -121,7 +121,9 @@
       audioFX.play("won");
 
       if (ranking !== null && ranking <= 10) {
-        submitHighscoreDialog.open();
+        setTimeout(() => {
+          submitHighscoreDialog.open();
+        }, 1000);
       }
     }
 
@@ -161,6 +163,13 @@
     const intensity = score < 50 ? "mild" : score < 100 ? "medium" : "high";
 
     return reactions[intensity][Math.floor(Math.random() * reactions[intensity].length)];
+  }
+
+  function handleSecondPassed(seconds) {
+    console.log(seconds);
+    if (seconds === 3) {
+      audioFX.play("clock");
+    }
   }
 
   onMount(setUp);
@@ -233,7 +242,7 @@
             </svg>
           {/each}
         </div>
-        <Timer minutes="1" onEnd={handleGameEnd} bind:this={timer} />
+        <Timer minutes="0" seconds="10" onEnd={handleGameEnd} onSecondPassed={handleSecondPassed} bind:this={timer} />
       </header>
       {#if isPlaying}
         <div class="h-full flex justify-center items-center overflow-hidden">
@@ -258,8 +267,8 @@
       <p class="text-balance">Dein aktueller Fortschritt geht dabei verloren.</p>
     </div>
     <div class="flex flex-col gap-2">
-      <button class="button ">Weiterspielen</button>
       <a href="/" class="button block">Ja, beenden</a>
+      <button class="button ">Weiterspielen</button>
     </div>
   </div>
 </Modal>

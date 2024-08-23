@@ -45,7 +45,7 @@
   </div>
   <div class="container">
     <div class="text-sm text-center flex flex-col gap-2">
-      Made with ❤️  by Nico Heinrich &copy; {new Date().getFullYear()} 
+      Made with &#x2764; by Nico Heinrich &copy; {new Date().getFullYear()} 
       <div>
         <a href="/imprint" class="underline">Impressum</a>
         <a href="/privacy" class="underline">Datenschutz</a>

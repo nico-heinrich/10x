@@ -1,19 +1,25 @@
 <script>
-    const sounds = {
-        ...import.meta.glob('$lib/assets/sounds/*.mp3'),
-        ...import.meta.glob('$lib/assets/sounds/*.wav'),
-    };
+    import clockSound from '$lib/assets/audio/clock.wav';
+    import matchSound from '$lib/assets/audio/match.wav';
+    import wonSound from '$lib/assets/audio/won.wav';
+    import lostSound from '$lib/assets/audio/lost.wav';
+    import levelSound from '$lib/assets/audio/level.wav';
 
-    const sources = Object.keys(sounds);
+    const sources = {
+      clock: clockSound,
+      match: matchSound,
+      won: wonSound,
+      lost: lostSound,
+      level: levelSound
+    }
 
     export function play(sound) {
-        const src = sources.find((source) => source.split('/').pop().split('.').shift().toLowerCase() === sound.toLowerCase());
-        const audio = new Audio(src);
+        const audio = new Audio(sources[sound]);
 
         audio.play();
     }
 </script>
 
-{#each sources as src}
+{#each Object.values(sources) as src}
     <audio {src} preload="auto" />
 {/each}

@@ -242,7 +242,7 @@
             </svg>
           {/each}
         </div>
-        <Timer minutes="0" seconds="10" onEnd={handleGameEnd} onSecondPassed={handleSecondPassed} bind:this={timer} />
+        <Timer minutes="1" onEnd={handleGameEnd} onSecondPassed={handleSecondPassed} bind:this={timer} />
       </header>
       {#if isPlaying}
         <div class="h-full flex justify-center items-center overflow-hidden">

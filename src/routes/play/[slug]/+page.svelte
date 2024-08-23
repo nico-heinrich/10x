@@ -166,7 +166,6 @@
   }
 
   function handleSecondPassed(seconds) {
-    console.log(seconds);
     if (seconds === 3) {
       audioFX.play("clock");
     }

@@ -11,8 +11,6 @@
     const res = await fetch(`/api/leaderboard/${$page.params.slug}`);
     const data = await res.json();
 
-    console.log(data);
-
     topTen = Array(10).fill({})
       .map((_, i) => data[i] || { name: "-", score: "-" });
   }

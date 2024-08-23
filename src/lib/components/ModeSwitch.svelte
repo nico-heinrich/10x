@@ -34,12 +34,12 @@
     Easy
   </button>
   <div
-    class="relative w-10 h-6 ring ring-2 ring-secondary rounded-full active:bg-secondary/10 transition-all duration-300 cursor-pointer"
+    class="relative w-8 h-5 ring ring-2 ring-secondary rounded-full active:bg-secondary/10 transition-all duration-300 cursor-pointer"
     on:click={toggleMode}
   >
     <div
-      class="absolute top-0 bottom-0 size-5 bg-secondary rounded-full m-0.5 transition-all duration-300 ease-in-out"
-      class:translate-x-4={!$isEasyMode}
+      class="absolute top-0 bottom-0 size-4 bg-secondary rounded-full m-0.5 transition-all duration-300 ease-in-out"
+      class:translate-x-3={!$isEasyMode}
       on:transitionend={updateDb}
     ></div>
   </div>

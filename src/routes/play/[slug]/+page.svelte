@@ -6,27 +6,14 @@
   import Pairs from '$lib/components/Pairs.svelte';
   import Timer from '$lib/components/Timer.svelte';
   import Modal from "$lib/components/Modal.svelte";
-  import SubmitScoreInput from "$lib/components/SubmitScoreInput.svelte";
+  import AudioFX from "$lib/components/AudioFX.svelte";
   import { onMount } from 'svelte';
-  import matchSoundSrc from '$lib/sounds/match.wav';
-  import levelSoundSrc from '$lib/sounds/level.wav';
-  import wonSoundSrc from '$lib/sounds/won.wav';
-  import lostSoundSrc from '$lib/sounds/lost.mp3';
   import { isEasyMode, userName } from '$lib/stores/preferences';
   import { enhance } from '$app/forms';
   import { goto } from '$app/navigation';
 
   export let form;
   let isFormLoading = false;
-
-  const soundCollection = [
-    { name: 'match', src: matchSoundSrc },
-    { name: 'level', src: levelSoundSrc },
-    { name: 'won', src: wonSoundSrc },
-    { name: 'lost', src: lostSoundSrc },
-  ]
-
-  let sounds = {}; 
 
   let isPlaying = false;
   let hasEnded = false;
@@ -37,8 +24,11 @@
   let pairs = null;
   let timer;
   let askBeforeLeaveDialog;
+  let submitHighscoreDialog;
   let isShaking = false;
   let ranking = null;
+
+  let audioFX;
 
   const gameName = games.find(game => game.slug === $page.params.slug).name;
   const allPairs = games.find(game => game.slug === $page.params.slug).pairs[$isEasyMode ? "easy" : "tenx"];
@@ -52,7 +42,7 @@
       repeated = 0;
       level++;
 
-      sounds.level.play();
+      audioFX.play("level");
     }
 
     setUp();
@@ -107,7 +97,7 @@
   function addToScore() {
     score += 10;
 
-    sounds.match.play();
+    audioFX.play("match");
   }
 
   function restart() {
@@ -117,6 +107,7 @@
     lifes = 3;
     hasEnded = false;
     form = null;
+    ranking = null;
     setUp();
   }
 
@@ -124,10 +115,14 @@
     timer?.stop();
 
     if (lifes === 0 || score < 1) {
-      sounds.lost.play();
+      audioFX.play("lost");
     } else {
       if (!$isEasyMode) await updateRanking();
-      sounds.won.play();
+      audioFX.play("won");
+
+      if (ranking !== null && ranking <= 10) {
+        submitHighscoreDialog.open();
+      }
     }
 
     hasEnded = true;
@@ -181,7 +176,7 @@
       {#if lifes === 0 || score < 1}
         <!-- Lost Screen -->
         <div class="space-y-4">
-          <h1 class="text-4xl font-bold">Oh snap!</h1>
+          <h1 class="text-4xl font-bold">Game Over</h1>
           {#if lifes === 0}
             <p class="text-balance">Dir sind die Leben ausgegangen!</p>
           {:else if score < 1}
@@ -194,35 +189,7 @@
           <h1 class="text-4xl font-bold">{getPostiveReaction()}</h1>
           {#if (!$isEasyMode && ranking)}
             <p class="text-balance">Du hast mit {score} Punkten den {ranking}. Platz erreicht!</p>
-            {#if !form?.success}
-              <p class="text-balance">Trage einen Namen ein, um deinen Highscore zu veröffentlichen:</p>
-              <form method="POST" action="?/submit" use:enhance={() => {
-                isFormLoading = true;
-                return async ({ update }) => {
-                  await update();
-                  isFormLoading = false;
-                }
-              }}>
-                <input type="hidden" name="score" value={score}>
-                <input type="hidden" name="game" value={$page.params.slug}>
-                <div class="space-y-2">
-                  <SubmitScoreInput name="name" value={form?.name || $userName} {isFormLoading} />
-                  <label class="block text-sm">
-                    <input
-                      type="checkbox"
-                      name="terms"
-                      id="terms"
-                      class="accent-secondary size-4 translate-y-0.5"
-                      disabled={isFormLoading}
-                    >
-                    <span>Ich habe die <a href="/privacy" target="_blank" class="underline">Datenschutz&shy;erklärung</a> gelesen und bin einverstanden.</span>
-                  </label>
-                  {#if form?.error}
-                    <div class="text-error text-sm">{form.error}</div>
-                  {/if}
-                </div>
-              </form>
-            {:else}
+            {#if form?.success}
               <p class="text-balance font-semibold">Dein Highscore wurde veröffentlicht.</p>
             {/if}
           {:else}
@@ -290,17 +257,64 @@
       <h2 class="text-xl text-balance font-semibold">Willst du das Spiel beenden?</h2>
       <p class="text-balance">Dein aktueller Fortschritt geht dabei verloren.</p>
     </div>
-    <div class="flex justify-end gap-2 mt-4">
-      <button class="button">Weiterspielen</button>
-      <a href="/" class="button">Ja</a>
+    <div class="flex flex-col gap-2">
+      <button class="button ">Weiterspielen</button>
+      <a href="/" class="button block">Ja, beenden</a>
     </div>
   </div>
 </Modal>
 
-<!-- Sounds -->
-{#each soundCollection as sound}
-  <audio src={sound.src} bind:this={sounds[sound.name]} preload="auto" />
-{/each}
+<!-- Submit Highscore Dialog -->
+<Modal bind:this={submitHighscoreDialog}>
+  <form method="POST" action="?/submit" use:enhance={() => {
+    isFormLoading = true;
+    return async ({ update, result }) => {
+      await update();
+
+      isFormLoading = false;
+      if (result?.type === "success") {
+        submitHighscoreDialog.close();
+      }
+    }
+  }}>
+    <input type="hidden" name="score" value={score}>
+    <input type="hidden" name="game" value={$page.params.slug}>
+    <div class="space-y-4">
+      <div class="space-y-2">
+        <h2 class="text-xl text-balance font-semibold">Herzlichen Glückwunsch!</h2>
+        <p class="text-pretty">Trage einen Namen ein, um deinen Highscore zu veröffentlichen:</p>
+      </div>
+      <div class="space-y-2">
+        <input type="text" name="name" value={form?.name || $userName} placeholder="Dein Name" disabled={isFormLoading} class="w-full border-b-2 border-secondary outline-none py-2 placeholder:text-secondary/30 font-semibold">
+        <label class="block text-sm">
+          <input
+            type="checkbox"
+            name="terms"
+            id="terms"
+            class="accent-secondary size-4 translate-y-0.5"
+            disabled={isFormLoading}
+          >
+          <span>Ich habe die <a href="/privacy" target="_blank" class="underline">Datenschutz&shy;erklärung</a> gelesen und bin einverstanden.</span>
+        </label>
+        {#if form?.error}
+          <div class="text-error text-sm">{form.error}</div>
+        {/if}
+      </div>
+      <div class="flex flex-col gap-2">
+        <button type="submit" disabled={isFormLoading} class="button w-full flex justify-center items-center">
+          {#if isFormLoading}
+            <div class="size-5 border-2 border-secondary border-t-transparent rounded-full animate-spin"></div>
+          {:else}
+            Veröffentlichen
+          {/if}
+        </button>
+        <button type="button" on:click={submitHighscoreDialog.close} disabled={isFormLoading} class="button w-full">Abbrechen</button>
+      </div>
+    </div>
+  </form>
+</Modal>
+
+<AudioFX bind:this={audioFX} />
 
 <style>
   .is-shaking {

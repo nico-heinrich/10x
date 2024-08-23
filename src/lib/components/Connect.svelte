@@ -15,7 +15,7 @@
 
     const target = event.target.closest("[data-connect]");
     startTarget = target;
-    const connectFrom = target.dataset.connect;
+    const connectFrom = target?.dataset.connect;
 
     if (!target) return;
 
@@ -93,14 +93,16 @@
   on:pointerleave={handlePointerLeave}
 >
   <svg xmlns="http://www.w3.org/2000/svg" class="text-secondary">
-    <path
-      d="M{x1},{y1} {y1 === y2 ? `L${x2},${y2}` : `C${(x1+x2)/2},${y1} ${(x1+x2)/2},${y2} ${x2},${y2}`}"
-      stroke="currentColor"
-      fill="none"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-dasharray={isConnectable ? "0" : "1, 5"}
-    />
+    {#if x1 && y1 && x2 && y2}
+      <path
+        d="M{x1},{y1} {y1 === y2 ? `L${x2},${y2}` : `C${(x1+x2)/2},${y1} ${(x1+x2)/2},${y2} ${x2},${y2}`}"
+        stroke="currentColor"
+        fill="none"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-dasharray={isConnectable ? "0" : "1, 5"}
+      />
+    {/if}
     {#if isPointerDown && startTarget}
       <circle cx={x1} cy={y1} r="4" fill="currentColor" />
       <circle cx={x2 || x1} cy={y2 || y1} r="4" fill="currentColor" />

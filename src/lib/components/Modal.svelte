@@ -17,7 +17,7 @@
   bind:this={modal}
   on:close={onClose}
 >
-  <form method="dialog">
+  <form method="dialog" class="max-w-96">
     <slot />
   </form>
 </dialog>

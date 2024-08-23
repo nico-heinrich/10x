@@ -63,7 +63,7 @@
         {#each randomizedItemsA as item, index (item)}
           <div class="animate-in from-left" style="animation-delay: {100 * index + 1}ms">
             <div
-              class="p-4 text-center rounded-full bg-secondary/75 text-primary transition-all duration-300 select-none"
+              class="p-4 text-center rounded-full bg-secondary/70 text-primary transition-all duration-300 select-none"
               class:is-match={matchedPairs.includes(item.id)}
               data-id={item.id}
               data-connect="right"
@@ -116,6 +116,6 @@
   .is-match {
     pointer-events: none;
     opacity: 0;
-    scale: .5;
+    scale: .9;
   }
 </style>

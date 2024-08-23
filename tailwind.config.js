@@ -3,9 +3,12 @@ export default {
   content: ["./src/**/*.{html,js,svelte,ts}"],
   theme: {
     extend: {
+      fontFamily: {
+        mono: "Spline Sans Mono, monospace",
+      },
       colors: {
         primary: "#fff",
-        secondary: "#7c5cff",
+        secondary: "#5B33FF",
         error: "#ff0050",
       },
     },

@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  src: url("./lib/assets/fonts/spline-sans-mono-v10-latin-regular.woff2");
+  font-family: "Spline Sans Mono";
+  font-weight: 400;
+}
+
+@font-face {
+  src: url("./lib/assets/fonts/spline-sans-mono-v10-latin-500.woff2");
+  font-family: "Spline Sans Mono";
+  font-weight: 500;
+}
+
 body {
   @apply bg-primary text-secondary font-mono;
 }
@@ -23,9 +35,14 @@ body {
   appearance: none;
   outline: none;
   touch-action: none;
+  user-select: none;
 }
 
-.button:active {
+.button:disabled {
+  opacity: .5;
+}
+
+.button:not(:disabled):active {
   box-shadow: 0 0 0 2px theme("colors.secondary") inset;
   transform: translateY(0);
 }
@@ -37,13 +54,15 @@ body {
     white-space: nowrap;
   }
 
-  .button:hover {
+
+  .button:not(:disabled):hover,
+  .button:not(:disabled):focus-visible {
     box-shadow: 0 0 0 2px theme("colors.secondary") inset,
                 0 3px theme("colors.secondary / 50%");
     transform: translateY(-3px);
   }
 
-  .button:active {
+  .button:not(:disabled):active {
     box-shadow: 0 0 0 2px theme("colors.secondary") inset;
     transform: translateY(0);
   }
@@ -55,6 +74,7 @@ body {
   margin: calc(theme("spacing.2") * -1);
   border-radius: 9999px;
   touch-action: none;
+  outline: none;
 }
 
 .icon-button:active {
@@ -62,6 +82,8 @@ body {
 }
 
 @media (hover: hover) {
+
+  .icon-button:focus-visible,
   .icon-button:hover {
     background-color: theme("colors.secondary / 15%");
   }
